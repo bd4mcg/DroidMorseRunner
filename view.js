@@ -133,6 +133,8 @@ export class View {
                 data: this.log.NR,
             })
             this.wipeFields()
+            // Let the Enter-key click finish bubbling before rebuilding the numeric keyboard.
+            window.setTimeout(() => window.DroidKeyboard?.show("call"), 0)
         }
     }
 
