@@ -15,9 +15,10 @@
 
 <body class="dark-theme">
   <header id="top-nav">
-    <div class="nav-brand">Web Morse Runner</div>
+    <div class="nav-brand">Droid Morse Runner</div>
     <div class="nav-controls">
-      <button id="settings_toggle" class="icon-btn" data-zh="⚙ 设置" data-en="⚙ Settings">⚙ Settings</button>
+      <button id="fullscreen_toggle" class="icon-btn" aria-label="Toggle full screen" title="Full screen">⛶</button>
+      <button id="settings_toggle" class="icon-btn" aria-label="Settings" title="Settings">⚙</button>
     </div>
   </header>
 
@@ -307,6 +308,7 @@
       currentLang = currentLang === 'en' ? 'zh' : 'en';
       localStorage.setItem('lang', currentLang);
       applyLang(currentLang);
+      syncFullscreenButton();
     });
 
     const settingsDrawer = document.getElementById('settings_drawer');
@@ -315,6 +317,31 @@
     settingsDrawer.addEventListener('click', (event) => {
       if (event.target === settingsDrawer) settingsDrawer.classList.add('hidden');
     });
+
+    const fullscreenBtn = document.getElementById('fullscreen_toggle');
+    const syncFullscreenButton = () => {
+      const fullscreen = Boolean(document.fullscreenElement);
+      fullscreenBtn.textContent = '⛶';
+      fullscreenBtn.setAttribute('aria-label', fullscreen ? 'Exit full screen' : 'Enter full screen');
+    };
+    fullscreenBtn.addEventListener('click', async () => {
+      try {
+        if (document.fullscreenElement) await document.exitFullscreen();
+        else await document.documentElement.requestFullscreen({ navigationUI: 'hide' });
+      } catch (error) {
+        console.warn('Full screen is not available in this browser.', error);
+      }
+    });
+    document.addEventListener('fullscreenchange', syncFullscreenButton);
+
+    const syncKeyboardLayout = () => {
+      if (!window.visualViewport) return;
+      const keyboardOpen = window.visualViewport.height < window.innerHeight * 0.72;
+      document.body.classList.toggle('keyboard-open', keyboardOpen);
+    };
+    window.visualViewport?.addEventListener('resize', syncKeyboardLayout);
+    window.visualViewport?.addEventListener('scroll', syncKeyboardLayout);
+    syncKeyboardLayout();
 
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js'));
