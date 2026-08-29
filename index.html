@@ -8,8 +8,8 @@
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <link rel="manifest" href="manifest.webmanifest?v=20260829.32" />
-  <link rel="stylesheet" href="style.css?v=20260829.32" type="text/css" media="screen" />
+  <link rel="manifest" href="manifest.webmanifest?v=20260829.33" />
+  <link rel="stylesheet" href="style.css?v=20260829.33" type="text/css" media="screen" />
   <title>Droid Morse Runner by BD4MCG</title>
 </head>
 
@@ -279,7 +279,7 @@
     </div>
   </div>
 
-  <script type="module" src="main.js?v=20260829.32"></script>
+  <script type="module" src="main.js?v=20260829.33"></script>
 
   <script>
     const themeBtn = document.getElementById('theme_toggle');
@@ -441,7 +441,6 @@
       const key = button.dataset.key;
       if (key === 'Enter' || key === 'Escape') {
         keyboardInput.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
-        if (key === 'Escape') hideVirtualKeyboard();
         return;
       }
       if (key === 'Backspace') {
@@ -464,7 +463,7 @@
     });
 
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=20260829.32'));
+      window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=20260829.33'));
     }
   </script>
 </body>

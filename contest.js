@@ -1,15 +1,15 @@
-import { AudioMessage, DEFAULT, OperatorState, RunMode, StationMessage } from "./defaults.js?v=20260829.32"
-import { _setContestRef } from "./station.js?v=20260829.32"
+import { AudioMessage, DEFAULT, OperatorState, RunMode, StationMessage } from "./defaults.js?v=20260829.33"
+import { _setContestRef } from "./station.js?v=20260829.33"
 
-import { Modulator } from "./modulator.js?v=20260829.32"
-import { Volume } from "./volume.js?v=20260829.32"
-import { MovAvg } from "./movavg.js?v=20260829.32"
-import { Station } from "./station.js?v=20260829.32"
-import { DxStation } from "./dxstation.js?v=20260829.32"
-import * as random from "./random.js?v=20260829.32"
-import { MyStation } from "./mystation.js?v=20260829.32"
-import { QrnStation } from "./qrnstation.js?v=20260829.32"
-import { QrmStation } from "./qrmstation.js?v=20260829.32"
+import { Modulator } from "./modulator.js?v=20260829.33"
+import { Volume } from "./volume.js?v=20260829.33"
+import { MovAvg } from "./movavg.js?v=20260829.33"
+import { Station } from "./station.js?v=20260829.33"
+import { DxStation } from "./dxstation.js?v=20260829.33"
+import * as random from "./random.js?v=20260829.33"
+import { MyStation } from "./mystation.js?v=20260829.33"
+import { QrnStation } from "./qrnstation.js?v=20260829.33"
+import { QrmStation } from "./qrmstation.js?v=20260829.33"
 
 export class Contest {
     constructor() {

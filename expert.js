@@ -1,4 +1,4 @@
-import { Config } from "./config.js?v=20260829.32"
+import { Config } from "./config.js?v=20260829.33"
 
 export class ExpertConfig {
     constructor() {
