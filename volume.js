@@ -1,4 +1,4 @@
-import { DEFAULT } from "./defaults.js"
+import { DEFAULT } from "./defaults.js?v=20260829.20"
 
 class Volume {
     constructor() {

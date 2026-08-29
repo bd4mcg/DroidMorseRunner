@@ -1,5 +1,5 @@
-import { DEFAULT, RunMode } from "./defaults.js"
-import { ContestDefinition } from "./contest-definition.js"
+import { DEFAULT, RunMode } from "./defaults.js?v=20260829.20"
+import { ContestDefinition } from "./contest-definition.js?v=20260829.20"
 
 
 export class Config {

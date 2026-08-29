@@ -1,5 +1,5 @@
-import { AudioMessage, DEFAULT, RunMode, StationMessage } from "./defaults.js"
-import { Log } from "./log.js"
+import { AudioMessage, DEFAULT, RunMode, StationMessage } from "./defaults.js?v=20260829.20"
+import { Log } from "./log.js?v=20260829.20"
 
 const exchangeId = {
     nr: 'nr',

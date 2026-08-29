@@ -1,5 +1,5 @@
-import { Keyer } from "./keyer.js"
-import { DEFAULT, RunMode, StationMessage, AudioMessage } from "./defaults.js"
+import { Keyer } from "./keyer.js?v=20260829.20"
+import { DEFAULT, RunMode, StationMessage, AudioMessage } from "./defaults.js?v=20260829.20"
 
 let _Contest = null
 let _Tst = null
