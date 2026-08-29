@@ -406,8 +406,17 @@
         showVirtualKeyboard(input);
         return;
       }
-      if (event.target.closest('#run, #virtual_keyboard')) return;
+      if (event.target.closest('#run, #send_button, #virtual_keyboard')) return;
       hideVirtualKeyboard();
+    });
+    document.querySelectorAll('#send_button button').forEach(button => {
+      button.addEventListener('click', event => {
+        event.stopPropagation();
+        window.setTimeout(() => {
+          const input = document.activeElement;
+          if (input?.matches('#input input')) showVirtualKeyboard(input);
+        }, 0);
+      });
     });
     virtualKeyboard.addEventListener('pointerdown', event => event.preventDefault());
     virtualKeyboard.addEventListener('click', event => {

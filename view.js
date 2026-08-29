@@ -283,6 +283,10 @@ export class View {
                 this.startContest()
                 // avoid loosing focus of input fields
                 this.processFunctionKey(e.target.id)
+                window.setTimeout(() => {
+                    const input = document.activeElement
+                    if (input?.matches("#input input")) window.DroidKeyboard?.show(input.id)
+                }, 100)
                 e.preventDefault()
             })
         })
