@@ -346,20 +346,20 @@
 
     const virtualKeyboard = document.getElementById('virtual_keyboard');
     const keyButton = (key, className = '') => {
-      const label = key === 'Escape' ? 'ESC' : key === 'Enter' ? '↵' : key;
+      const label = key === 'Escape' ? 'ESC' : key === 'Enter' ? '↵' : key === 'Backspace' ? '←' : key;
       return `<button type="button" class="virtual-key ${className}" data-key="${key}">${label}</button>`;
     };
     const qwertyKeyboard = () => [
-      `<div class="keyboard-row keyboard-row-numbers">${'1234567890'.split('').map(key => keyButton(key)).join('')}</div>`,
+      `<div class="keyboard-row keyboard-row-numbers">${'1234567890'.split('').map(key => keyButton(key)).join('')}${keyButton('Backspace', 'backspace-key')}</div>`,
       `<div class="keyboard-row keyboard-row-qwerty">${'QWERTYUIOP'.split('').map(key => keyButton(key)).join('')}</div>`,
       `<div class="keyboard-row keyboard-row-asdf">${'ASDFGHJKL'.split('').map(key => keyButton(key)).join('')}</div>`,
       `<div class="keyboard-row keyboard-row-bottom">${keyButton('Escape', 'special-key esc-key')}${'ZXCVBNM/'.split('').map(key => keyButton(key)).join('')}${keyButton('Enter', 'special-key enter-key')}</div>`
     ].join('');
     const numericKeyboard = () => [
-      `<div class="number-keyboard-row">${'123'.split('').map(key => keyButton(key)).join('')}</div>`,
-      `<div class="number-keyboard-row">${'456'.split('').map(key => keyButton(key)).join('')}</div>`,
-      `<div class="number-keyboard-row">${'789'.split('').map(key => keyButton(key)).join('')}</div>`,
-      `<div class="number-keyboard-row">${keyButton('Escape', 'special-key esc-key')}${keyButton('0')}${keyButton('Enter', 'special-key enter-key')}</div>`
+      `<div class="number-keyboard-row">${'123'.split('').map(key => keyButton(key)).join('')}${keyButton('Backspace', 'backspace-key')}</div>`,
+      `<div class="number-keyboard-row">${'456'.split('').map(key => keyButton(key)).join('')}<span class="number-keyboard-empty"></span></div>`,
+      `<div class="number-keyboard-row">${'789'.split('').map(key => keyButton(key)).join('')}<span class="number-keyboard-empty"></span></div>`,
+      `<div class="number-keyboard-row number-keyboard-row-enter">${keyButton('Escape', 'special-key esc-key')}${keyButton('0')}${keyButton('Enter', 'special-key enter-key')}</div>`
     ].join('');
 
     let keyboardInput = null;
@@ -426,6 +426,15 @@
       if (key === 'Enter' || key === 'Escape') {
         keyboardInput.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
         if (key === 'Escape') hideVirtualKeyboard();
+        return;
+      }
+      if (key === 'Backspace') {
+        const start = keyboardInput.selectionStart ?? keyboardInput.value.length;
+        const end = keyboardInput.selectionEnd ?? keyboardInput.value.length;
+        if (start === 0 && end === 0) return;
+        const from = start === end ? start - 1 : start;
+        keyboardInput.setRangeText('', from, end, 'end');
+        keyboardInput.dispatchEvent(new InputEvent('input', { bubbles: true, inputType: 'deleteContentBackward' }));
         return;
       }
       if (keyboardInput.classList.contains('NR') && !/^\d$/.test(key)) return;
