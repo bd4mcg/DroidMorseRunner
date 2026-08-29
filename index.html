@@ -54,17 +54,14 @@
     <div id="low_row">
       <div class="flex_form block" id="input">
         <div>
-          <label for="call" data-zh="呼号输入" data-en="Call">Call</label>
-          <input autocomplete="off" enterkeyhint="enter" inputmode="text" id="call" class="cont_input" type="text" value="" name="call" maxlength="15" size="15" style="text-transform: uppercase">
+          <input autocomplete="off" enterkeyhint="enter" inputmode="none" id="call" class="cont_input" type="text" value="" name="call" maxlength="15" size="15" style="text-transform: uppercase" placeholder="Call" data-placeholder-zh="呼号" data-placeholder-en="Call" aria-label="Call">
         </div>
         <div class="flex_form" id="exchange">
           <div>
-            <label for="rst">RST</label>
-            <input autocomplete="off" enterkeyhint="enter" inputmode="text" id="rst" class="NR" maxlength="3" size="3" type="text" value="" name="rst">
+            <input autocomplete="off" enterkeyhint="enter" inputmode="none" id="rst" class="NR" maxlength="3" size="3" type="text" value="" name="rst" placeholder="RST" aria-label="RST">
           </div>
           <div>
-            <label for="nr" id="exchange1">Nr.</label>
-            <input autocomplete="off" enterkeyhint="enter" inputmode="text" id="nr" class="NR" maxlength="3" size="3" type="text" value="" name="nr">
+            <input autocomplete="off" enterkeyhint="enter" inputmode="none" id="nr" class="NR" maxlength="3" size="3" type="text" value="" name="nr" placeholder="Nr." aria-label="Nr.">
           </div>
         </div>
         <div class="tx-box">
@@ -76,6 +73,7 @@
         <button id="F5">F5 &lt;his&gt;</button><button id="F6">F6 B4</button><button id="F7">F7 &quest;</button><button id="F8">F8 NIL</button>
       </div>
     </div>
+    <div id="virtual_keyboard" class="virtual-keyboard hidden" aria-label="Morse input keyboard"></div>
   </div>
 
   <aside id="settings_drawer" class="settings-drawer hidden" aria-label="Settings">
@@ -302,6 +300,9 @@
       document.querySelectorAll('[data-zh]').forEach(el => {
         el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
       });
+      document.querySelectorAll('[data-placeholder-zh]').forEach(el => {
+        el.placeholder = lang === 'zh' ? el.getAttribute('data-placeholder-zh') : el.getAttribute('data-placeholder-en');
+      });
     }
     applyLang(currentLang);
     langBtn.addEventListener('click', () => {
@@ -342,6 +343,71 @@
     window.visualViewport?.addEventListener('resize', syncKeyboardLayout);
     window.visualViewport?.addEventListener('scroll', syncKeyboardLayout);
     syncKeyboardLayout();
+
+    const virtualKeyboard = document.getElementById('virtual_keyboard');
+    const keyButton = (key, className = '') => {
+      const label = key === 'Escape' ? 'ESC' : key === 'Enter' ? '↵' : key;
+      return `<button type="button" class="virtual-key ${className}" data-key="${key}">${label}</button>`;
+    };
+    const qwertyKeyboard = () => [
+      `<div class="keyboard-row keyboard-row-numbers">${'1234567890'.split('').map(key => keyButton(key)).join('')}</div>`,
+      `<div class="keyboard-row keyboard-row-qwerty">${'QWERTYUIOP'.split('').map(key => keyButton(key)).join('')}</div>`,
+      `<div class="keyboard-row keyboard-row-asdf">${'ASDFGHJKL'.split('').map(key => keyButton(key)).join('')}</div>`,
+      `<div class="keyboard-row keyboard-row-bottom">${keyButton('Escape', 'special-key esc-key')}${'ZXCVBNM/'.split('').map(key => keyButton(key)).join('')}${keyButton('Enter', 'special-key enter-key')}</div>`
+    ].join('');
+    const numericKeyboard = () => [
+      `<div class="number-keyboard-row">${'123'.split('').map(key => keyButton(key)).join('')}</div>`,
+      `<div class="number-keyboard-row">${'456'.split('').map(key => keyButton(key)).join('')}</div>`,
+      `<div class="number-keyboard-row">${'789'.split('').map(key => keyButton(key)).join('')}</div>`,
+      `<div class="number-keyboard-row">${keyButton('Escape', 'special-key esc-key')}${keyButton('0')}${keyButton('Enter', 'special-key enter-key')}</div>`
+    ].join('');
+
+    let keyboardInput = null;
+    let keyboardMode = null;
+    const hideVirtualKeyboard = () => {
+      keyboardInput = null;
+      virtualKeyboard.classList.add('hidden');
+      document.body.classList.remove('virtual-keyboard-open');
+    };
+    const showVirtualKeyboard = input => {
+      keyboardInput = input;
+      input.setAttribute('inputmode', 'none');
+      const mode = input.classList.contains('NR') ? 'numeric' : 'qwerty';
+      if (mode !== keyboardMode) {
+        virtualKeyboard.classList.toggle('numeric-keyboard', mode === 'numeric');
+        virtualKeyboard.innerHTML = mode === 'numeric' ? numericKeyboard() : qwertyKeyboard();
+        keyboardMode = mode;
+      }
+      virtualKeyboard.classList.remove('hidden');
+      document.body.classList.add('virtual-keyboard-open');
+    };
+    document.addEventListener('focusin', event => {
+      if (event.target.matches('#input input')) showVirtualKeyboard(event.target);
+    });
+    document.addEventListener('pointerdown', event => {
+      const input = event.target.closest('#input input');
+      if (input) showVirtualKeyboard(input);
+      else if (!event.target.closest('#virtual_keyboard')) hideVirtualKeyboard();
+    });
+    virtualKeyboard.addEventListener('pointerdown', event => event.preventDefault());
+    virtualKeyboard.addEventListener('click', event => {
+      const button = event.target.closest('[data-key]');
+      if (!button || !keyboardInput) return;
+      const key = button.dataset.key;
+      if (key === 'Enter' || key === 'Escape') {
+        keyboardInput.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
+        if (key === 'Escape') hideVirtualKeyboard();
+        return;
+      }
+      if (keyboardInput.classList.contains('NR') && !/^\d$/.test(key)) return;
+      const start = keyboardInput.selectionStart ?? keyboardInput.value.length;
+      const end = keyboardInput.selectionEnd ?? keyboardInput.value.length;
+      const maximum = Number(keyboardInput.maxLength);
+      const nextValue = keyboardInput.value.slice(0, start) + key + keyboardInput.value.slice(end);
+      if (maximum > 0 && nextValue.length > maximum) return;
+      keyboardInput.setRangeText(key, start, end, 'end');
+      keyboardInput.dispatchEvent(new InputEvent('input', { bubbles: true, inputType: 'insertText', data: key }));
+    });
 
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js'));

@@ -244,10 +244,6 @@ export class ContestDefinition {
         exchange.innerHTML = ''
         this._contest.exchange.forEach(ex => {
             const div = document.createElement("div")
-            const label = document.createElement("label")
-            label.for = ex.id
-            label.innerText = ex.text
-            div.appendChild(label)
             const input = document.createElement("input")
             input.id = ex.id
             if (ex.numeric) input.classList.add("NR")
@@ -258,6 +254,8 @@ export class ContestDefinition {
             input.value = ""
             input.name = ex.id
             input.autocomplete = "off"
+            input.placeholder = ex.text
+            input.setAttribute("aria-label", ex.text)
             div.appendChild(input)
             exchange.appendChild(div)
         })
