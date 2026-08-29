@@ -1,9 +1,9 @@
-import { DEFAULT, StationMessage, RunMode, OperatorState } from "./defaults.js?v=20260829.28"
-import { Station } from "./station.js?v=20260829.28"
-import { DxOperator } from "./dxoperator.js?v=20260829.28"
+import { DEFAULT, StationMessage, RunMode, OperatorState } from "./defaults.js?v=20260829.30"
+import { Station } from "./station.js?v=20260829.30"
+import { DxOperator } from "./dxoperator.js?v=20260829.30"
 import * as random from './random.js'
-import { Tst } from "./contest.js?v=20260829.28"
-import { Qsb } from "./qsb.js?v=20260829.28"
+import { Tst } from "./contest.js?v=20260829.30"
+import { Qsb } from "./qsb.js?v=20260829.30"
 
 
 export class DxStation extends Station {

@@ -8,8 +8,8 @@
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <link rel="manifest" href="manifest.webmanifest?v=20260829.28" />
-  <link rel="stylesheet" href="style.css?v=20260829.28" type="text/css" media="screen" />
+  <link rel="manifest" href="manifest.webmanifest?v=20260829.30" />
+  <link rel="stylesheet" href="style.css?v=20260829.30" type="text/css" media="screen" />
   <title>Droid Morse Runner by BD4MCG</title>
 </head>
 
@@ -279,7 +279,7 @@
     </div>
   </div>
 
-  <script type="module" src="main.js?v=20260829.28"></script>
+  <script type="module" src="main.js?v=20260829.30"></script>
 
   <script>
     const themeBtn = document.getElementById('theme_toggle');
@@ -361,10 +361,12 @@
       `<div class="keyboard-row keyboard-row-bottom">${keyButton('Escape', 'special-key esc-key')}${'ZXCVBNM/'.split('').map(key => keyButton(key)).join('')}${keyButton('Enter', 'special-key enter-key')}</div>`
     ].join('');
     const numericKeyboard = () => [
-      `<div class="number-keyboard-row">${'123'.split('').map(key => keyButton(key)).join('')}${keyButton('Backspace', 'backspace-key')}</div>`,
-      `<div class="number-keyboard-row">${'456'.split('').map(key => keyButton(key)).join('')}<span class="number-keyboard-empty"></span></div>`,
-      `<div class="number-keyboard-row">${'789'.split('').map(key => keyButton(key)).join('')}<span class="number-keyboard-empty"></span></div>`,
-      `<div class="number-keyboard-row number-keyboard-row-enter">${keyButton('Escape', 'special-key esc-key')}${keyButton('0')}${keyButton('Enter', 'special-key enter-key')}</div>`
+      `<div class="number-keyboard-grid">`,
+      `${'123'.split('').map(key => keyButton(key)).join('')}${keyButton('Backspace', 'backspace-key')}`,
+      `${'456'.split('').map(key => keyButton(key)).join('')}`,
+      `${'789'.split('').map(key => keyButton(key)).join('')}`,
+      `${keyButton('Escape', 'special-key esc-key')}${keyButton('0')}<span class="number-keyboard-empty"></span>`,
+      `${keyButton('Enter', 'special-key enter-key numeric-enter-key')}</div>`
     ].join('');
 
     let keyboardInput = null;
@@ -462,7 +464,7 @@
     });
 
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=20260829.28'));
+      window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=20260829.30'));
     }
   </script>
 </body>

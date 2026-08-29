@@ -1,6 +1,6 @@
 
-import { Tst } from "./contest.js?v=20260829.28"
-import { AudioMessage } from "./defaults.js?v=20260829.28"
+import { Tst } from "./contest.js?v=20260829.30"
+import { AudioMessage } from "./defaults.js?v=20260829.30"
 
 class ContestWorkletProcessor extends AudioWorkletProcessor {
 
