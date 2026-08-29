@@ -43,7 +43,7 @@
       <button id="settings_toggle" class="icon-btn" aria-label="Settings" title="Settings">⚙</button>
       <button id="fullscreen_toggle" class="icon-btn" aria-label="Toggle fullscreen" title="Fullscreen">⛶</button>
       <div id="clock">0:00:00</div>
-      <div id="session_score" aria-label="Raw points">Pts: <b id="raw_pts" title="Raw">0</b></div>
+      <div id="session_score" aria-label="Raw points">Pts <b id="raw_pts" title="Raw">0</b></div>
       <button id="run" data-zh="▶ 运行" data-en="▶ Run">▶ Run</button>
     </section>
     <div id="low_row">
@@ -447,7 +447,45 @@
         }, 0);
       });
     });
-    virtualKeyboard.addEventListener('pointerdown', event => event.preventDefault());
+    let backspaceHoldDelay = null;
+    let backspaceRepeat = null;
+    let suppressBackspaceClick = false;
+    const deleteBackward = () => {
+      if (!keyboardInput) return;
+      const start = keyboardInput.selectionStart ?? keyboardInput.value.length;
+      const end = keyboardInput.selectionEnd ?? keyboardInput.value.length;
+      if (start === 0 && end === 0) return;
+      const from = start === end ? start - 1 : start;
+      keyboardInput.setRangeText('', from, end, 'end');
+      keyboardInput.dispatchEvent(new InputEvent('input', { bubbles: true, inputType: 'deleteContentBackward' }));
+    };
+    const stopBackspaceRepeat = () => {
+      window.clearTimeout(backspaceHoldDelay);
+      window.clearInterval(backspaceRepeat);
+      backspaceHoldDelay = null;
+      backspaceRepeat = null;
+    };
+    virtualKeyboard.addEventListener('pointerdown', event => {
+      event.preventDefault();
+      const button = event.target.closest('[data-key="Backspace"]');
+      if (!button || !keyboardInput) return;
+      suppressBackspaceClick = true;
+      deleteBackward();
+      stopBackspaceRepeat();
+      backspaceHoldDelay = window.setTimeout(() => {
+        backspaceRepeat = window.setInterval(deleteBackward, 65);
+      }, 350);
+    });
+    document.addEventListener('pointerup', () => {
+      if (backspaceHoldDelay || backspaceRepeat) {
+        stopBackspaceRepeat();
+        window.setTimeout(() => { suppressBackspaceClick = false; }, 0);
+      }
+    });
+    document.addEventListener('pointercancel', () => {
+      stopBackspaceRepeat();
+      suppressBackspaceClick = false;
+    });
     virtualKeyboard.addEventListener('click', event => {
       const button = event.target.closest('[data-key]');
       if (!button || !keyboardInput) return;
@@ -457,12 +495,8 @@
         return;
       }
       if (key === 'Backspace') {
-        const start = keyboardInput.selectionStart ?? keyboardInput.value.length;
-        const end = keyboardInput.selectionEnd ?? keyboardInput.value.length;
-        if (start === 0 && end === 0) return;
-        const from = start === end ? start - 1 : start;
-        keyboardInput.setRangeText('', from, end, 'end');
-        keyboardInput.dispatchEvent(new InputEvent('input', { bubbles: true, inputType: 'deleteContentBackward' }));
+        if (suppressBackspaceClick) return;
+        deleteBackward();
         return;
       }
       if (keyboardInput.classList.contains('NR') && !/^\d$/.test(key)) return;
