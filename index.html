@@ -8,8 +8,8 @@
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <link rel="manifest" href="manifest.webmanifest?v=20260829.20" />
-  <link rel="stylesheet" href="style.css?v=20260829.20" type="text/css" media="screen" />
+  <link rel="manifest" href="manifest.webmanifest?v=20260829.23" />
+  <link rel="stylesheet" href="style.css?v=20260829.23" type="text/css" media="screen" />
   <title>Droid Morse Runner by BD4MCG</title>
 </head>
 
@@ -276,7 +276,7 @@
     </div>
   </div>
 
-  <script type="module" src="main.js?v=20260829.20"></script>
+  <script type="module" src="main.js?v=20260829.23"></script>
 
   <script>
     const themeBtn = document.getElementById('theme_toggle');
@@ -346,8 +346,10 @@
 
     const virtualKeyboard = document.getElementById('virtual_keyboard');
     const keyButton = (key, className = '') => {
-      const label = key === 'Escape' ? 'ESC' : key === 'Enter' ? '↵' : key === 'Backspace' ? '←' : key;
-      return `<button type="button" class="virtual-key ${className}" data-key="${key}">${label}</button>`;
+      const label = key === 'Escape' ? 'ESC' : key === 'Enter'
+        ? '<svg class="return-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6v8H7m0 0 4-4m-4 4 4 4"/></svg>'
+        : key === 'Backspace' ? '←' : key;
+      return `<button type="button" class="virtual-key ${className}" data-key="${key}" aria-label="${key}">${label}</button>`;
     };
     const qwertyKeyboard = () => [
       `<div class="keyboard-row keyboard-row-numbers">${'1234567890'.split('').map(key => keyButton(key)).join('')}${keyButton('Backspace', 'backspace-key')}</div>`,
@@ -448,7 +450,7 @@
     });
 
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=20260829.20'));
+      window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=20260829.23'));
     }
   </script>
 </body>

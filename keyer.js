@@ -1,4 +1,4 @@
-import { DEFAULT } from "./defaults.js?v=20260829.20"
+import { DEFAULT } from "./defaults.js?v=20260829.23"
 const MorseMap = new Map([
     ['<ka>', '-.-.-'], // Message begins / Start of work 
     ['<sk>', '...-.-'], //  End of contact / End of work

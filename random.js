@@ -1,4 +1,4 @@
-import { DEFAULT } from "./defaults.js?v=20260829.20"
+import { DEFAULT } from "./defaults.js?v=20260829.23"
 
 export const RndNormal = () => {
   return Math.sqrt(-2 * Math.log(Math.random())) * Math.cos(Math.PI * 2 * Math.random())

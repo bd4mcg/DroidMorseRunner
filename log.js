@@ -1,6 +1,6 @@
-import { ContestDefinition } from "./contest-definition.js?v=20260829.20"
-import { RunMode } from "./defaults.js?v=20260829.20"
-import { Keyer } from "./keyer.js?v=20260829.20"
+import { ContestDefinition } from "./contest-definition.js?v=20260829.23"
+import { RunMode } from "./defaults.js?v=20260829.23"
+import { Keyer } from "./keyer.js?v=20260829.23"
 
 export class Log {
 
@@ -301,8 +301,12 @@ export class Log {
         row.insertCell().textContent = qso.SendExchange.join(" ")
         row.insertCell().textContent = `${qso.Pref}`
         row.insertCell().textContent = `${qso.Check}`
-        let log = document.getElementById("log")
-        log.scrollTop = log.scrollHeight
+        const log = document.getElementById("log")
+        // Rows can reflow after the browser paints. Scroll after that paint so the
+        // newest QSO is always kept in view, including on narrow phone screens.
+        requestAnimationFrame(() => {
+            log.scrollTop = log.scrollHeight
+        })
     }
 
 }
