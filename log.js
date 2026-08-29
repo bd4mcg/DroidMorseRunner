@@ -1,6 +1,6 @@
-import { ContestDefinition } from "./contest-definition.js?v=20260829.23"
-import { RunMode } from "./defaults.js?v=20260829.23"
-import { Keyer } from "./keyer.js?v=20260829.23"
+import { ContestDefinition } from "./contest-definition.js?v=20260829.28"
+import { RunMode } from "./defaults.js?v=20260829.28"
+import { Keyer } from "./keyer.js?v=20260829.28"
 
 export class Log {
 
@@ -212,6 +212,12 @@ export class Log {
         let conf_pts = this.ConfCalls.size
         let conf_multi = this.ConfPrefix.size
         let conf_score = conf_pts * conf_multi
+        const rawPoints = this.runmode === RunMode.Hst ? this.HstRawScore : pts
+        const verifiedPoints = this.runmode === RunMode.Hst ? this.HstVerifiedScore : conf_pts
+        const rawPointsEl = document.getElementById('raw_pts')
+        const verifiedPointsEl = document.getElementById('verified_pts')
+        if (rawPointsEl) rawPointsEl.innerText = rawPoints
+        if (verifiedPointsEl) verifiedPointsEl.innerText = verifiedPoints
         // Points 
         let pts_row = document.querySelector('.table_result tr:nth-child(2)')
 

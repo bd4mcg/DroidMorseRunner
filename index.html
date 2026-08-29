@@ -8,8 +8,8 @@
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <link rel="manifest" href="manifest.webmanifest?v=20260829.23" />
-  <link rel="stylesheet" href="style.css?v=20260829.23" type="text/css" media="screen" />
+  <link rel="manifest" href="manifest.webmanifest?v=20260829.28" />
+  <link rel="stylesheet" href="style.css?v=20260829.28" type="text/css" media="screen" />
   <title>Droid Morse Runner by BD4MCG</title>
 </head>
 
@@ -49,6 +49,9 @@
   <div id="footer">
     <section id="session_bar" aria-label="Timer controls">
       <div id="clock">00:00:00</div>
+      <div id="session_score" aria-label="Points">Pts:
+        <b id="raw_pts" title="Raw" aria-label="Raw points">0</b><span>/</span><b id="verified_pts" title="Verified" aria-label="Verified points">0</b>
+      </div>
       <button id="run" data-zh="▶ 运行" data-en="▶ Run">▶ Run</button>
     </section>
     <div id="low_row">
@@ -276,7 +279,7 @@
     </div>
   </div>
 
-  <script type="module" src="main.js?v=20260829.23"></script>
+  <script type="module" src="main.js?v=20260829.28"></script>
 
   <script>
     const themeBtn = document.getElementById('theme_toggle');
@@ -366,6 +369,14 @@
 
     let keyboardInput = null;
     let keyboardMode = null;
+    const keepLogAtEnd = () => {
+      // Opening the keyboard changes the available log height. Wait for the
+      // resize to paint before moving the newest entry into view.
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        const log = document.getElementById('log');
+        if (log) log.scrollTop = log.scrollHeight;
+      }));
+    };
     const hideVirtualKeyboard = () => {
       keyboardInput = null;
       virtualKeyboard.classList.add('hidden');
@@ -382,6 +393,7 @@
       }
       virtualKeyboard.classList.remove('hidden');
       document.body.classList.add('virtual-keyboard-open');
+      keepLogAtEnd();
     };
     window.DroidKeyboard = {
       show(inputId = 'call') {
@@ -450,7 +462,7 @@
     });
 
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=20260829.23'));
+      window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=20260829.28'));
     }
   </script>
 </body>

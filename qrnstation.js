@@ -1,6 +1,6 @@
-import { Station } from "./station.js?v=20260829.23"
+import { Station } from "./station.js?v=20260829.28"
 import * as random from './random.js'
-import { DEFAULT } from "./defaults.js?v=20260829.23"
+import { DEFAULT } from "./defaults.js?v=20260829.28"
 
 export class QrnStation extends Station {
     constructor() {
