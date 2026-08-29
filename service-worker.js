@@ -1,4 +1,4 @@
-const CACHE = 'web-morse-runner-v1';
+const CACHE = 'web-morse-runner-v7';
 const APP_SHELL = ['./', './index.html', './style.css', './manifest.webmanifest', './icon.svg'];
 
 self.addEventListener('install', event => {

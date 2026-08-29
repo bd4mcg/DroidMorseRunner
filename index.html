@@ -49,7 +49,7 @@
   <div id="footer">
     <section id="session_bar" aria-label="Timer controls">
       <div id="clock">00:00:00</div>
-      <button id="run" data-zh="▶ 开始" data-en="▶ Start">▶ Start</button>
+      <button id="run" data-zh="▶ 运行" data-en="▶ Run">▶ Run</button>
     </section>
     <div id="low_row">
       <div class="flex_form block" id="input">
@@ -381,13 +381,33 @@
       virtualKeyboard.classList.remove('hidden');
       document.body.classList.add('virtual-keyboard-open');
     };
-    document.addEventListener('focusin', event => {
-      if (event.target.matches('#input input')) showVirtualKeyboard(event.target);
+    window.DroidKeyboard = {
+      show(inputId = 'call') {
+        const input = document.getElementById(inputId);
+        if (!input?.matches('#input input')) return;
+        input.focus({ preventScroll: true });
+        showVirtualKeyboard(input);
+      },
+      hide: hideVirtualKeyboard,
+    };
+    document.addEventListener('droid-keyboard-request', event => {
+      window.DroidKeyboard.show(event.detail?.inputId || 'call');
     });
-    document.addEventListener('pointerdown', event => {
+    document.addEventListener('droid-keyboard-dismiss', () => window.DroidKeyboard.hide());
+    document.addEventListener('focusin', event => {
+      // Keep a keyboard already opened by the user in sync when Enter advances fields.
+      if (!virtualKeyboard.classList.contains('hidden') && event.target.matches('#input input')) {
+        showVirtualKeyboard(event.target);
+      }
+    });
+    document.addEventListener('click', event => {
       const input = event.target.closest('#input input');
-      if (input) showVirtualKeyboard(input);
-      else if (!event.target.closest('#virtual_keyboard')) hideVirtualKeyboard();
+      if (input) {
+        showVirtualKeyboard(input);
+        return;
+      }
+      if (event.target.closest('#run, #virtual_keyboard')) return;
+      hideVirtualKeyboard();
     });
     virtualKeyboard.addEventListener('pointerdown', event => event.preventDefault());
     virtualKeyboard.addEventListener('click', event => {

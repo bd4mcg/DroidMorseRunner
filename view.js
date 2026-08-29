@@ -528,6 +528,11 @@ export class View {
         this.running = true
         if (this._expertConfig) this._expertConfig.hide()
         this.wipeFields()
+        // Run after this click finishes, so global click handlers cannot immediately hide it.
+        window.setTimeout(() => {
+            if (!this.running) return
+            window.DroidKeyboard?.show("call")
+        }, 50)
         this.stopTX()
         this.pileupStations = 0
 
@@ -624,6 +629,8 @@ export class View {
             data: conf,
         })
         if (this._recArmed) this._startCapture()
+        // Audio startup is asynchronous; focus Call only after it completes.
+        window.DroidKeyboard?.show("call")
     }
 
     updateCall(e) {
@@ -650,6 +657,8 @@ export class View {
     stopContest() {
         if (this.recording) this._stopCapture()
         this.running = false
+        document.activeElement?.blur()
+        window.DroidKeyboard?.hide()
         this.toggleRunButton()
         if (this._expertConfig) this._expertConfig.show()
         this.sendMessage({
