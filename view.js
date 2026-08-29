@@ -1,12 +1,12 @@
-import { Calls } from "./call.js?v=20260829.33"
-import { AudioMessage, DEFAULT, RunMode, StationMessage } from "./defaults.js?v=20260829.33"
-import { Log } from "./log.js?v=20260829.33"
-import { Config } from "./config.js?v=20260829.33"
-import { Transcript } from "./transcript.js?v=20260829.33"
-import { ExpertConfig } from "./expert.js?v=20260829.33"
-import { float32ToInt16, buildWavBuffer, recFilename } from "./recording.js?v=20260829.33"
+import { Calls } from "./call.js?v=20260830.48"
+import { AudioMessage, DEFAULT, RunMode, StationMessage } from "./defaults.js?v=20260830.48"
+import { Log } from "./log.js?v=20260830.48"
+import { Config } from "./config.js?v=20260830.48"
+import { Transcript } from "./transcript.js?v=20260830.48"
+import { ExpertConfig } from "./expert.js?v=20260830.48"
+import { float32ToInt16, buildWavBuffer, recFilename } from "./recording.js?v=20260830.48"
 
-import { ContestDefinition } from "./contest-definition.js?v=20260829.33"
+import { ContestDefinition } from "./contest-definition.js?v=20260830.48"
 
 export class View {
     constructor() {
@@ -455,7 +455,7 @@ export class View {
         let hours = Math.floor(sec / 3600)
         let minutes = Math.floor((sec - (hours * 3600)) / 60)
         let seconds = Math.floor(sec - (hours * 3600) - (minutes * 60))
-        return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")
+        return `${hours}:${String(minutes).padStart(2, "0")
             }:${String(seconds).padStart(2, "0")}`
     }
 
@@ -556,7 +556,7 @@ export class View {
             await this.ctx.resume()
         }
 
-        await this.ctx.audioWorklet.addModule("contest-processor.js?v=20260829.33")
+        await this.ctx.audioWorklet.addModule("contest-processor.js?v=20260830.48")
         this.ContestNode = new AudioWorkletNode(
             this.ctx,
             "contest-processor",

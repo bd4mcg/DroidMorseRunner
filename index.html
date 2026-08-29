@@ -8,20 +8,12 @@
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <link rel="manifest" href="manifest.webmanifest?v=20260829.33" />
-  <link rel="stylesheet" href="style.css?v=20260829.33" type="text/css" media="screen" />
+  <link rel="manifest" href="manifest.webmanifest?v=20260830.48" />
+  <link rel="stylesheet" href="style.css?v=20260830.48" type="text/css" media="screen" />
   <title>Droid Morse Runner by BD4MCG</title>
 </head>
 
 <body class="dark-theme">
-  <header id="top-nav">
-    <div class="nav-brand">Droid Morse Runner</div>
-    <div class="nav-controls">
-      <button id="fullscreen_toggle" class="icon-btn" aria-label="Toggle full screen" title="Full screen">⛶</button>
-      <button id="settings_toggle" class="icon-btn" aria-label="Settings" title="Settings">⚙</button>
-    </div>
-  </header>
-
   <main id="main">
     <div id="container">
       <section class="block" id="log" aria-label="QSO log">
@@ -48,10 +40,10 @@
 
   <div id="footer">
     <section id="session_bar" aria-label="Timer controls">
-      <div id="clock">00:00:00</div>
-      <div id="session_score" aria-label="Points">Pts:
-        <b id="raw_pts" title="Raw" aria-label="Raw points">0</b><span>/</span><b id="verified_pts" title="Verified" aria-label="Verified points">0</b>
-      </div>
+      <button id="settings_toggle" class="icon-btn" aria-label="Settings" title="Settings">⚙</button>
+      <button id="fullscreen_toggle" class="icon-btn" aria-label="Toggle fullscreen" title="Fullscreen">⛶</button>
+      <div id="clock">0:00:00</div>
+      <div id="session_score" aria-label="Raw points">Pts: <b id="raw_pts" title="Raw">0</b></div>
       <button id="run" data-zh="▶ 运行" data-en="▶ Run">▶ Run</button>
     </section>
     <div id="low_row">
@@ -279,7 +271,7 @@
     </div>
   </div>
 
-  <script type="module" src="main.js?v=20260829.33"></script>
+  <script type="module" src="main.js?v=20260830.48"></script>
 
   <script>
     const themeBtn = document.getElementById('theme_toggle');
@@ -312,7 +304,6 @@
       currentLang = currentLang === 'en' ? 'zh' : 'en';
       localStorage.setItem('lang', currentLang);
       applyLang(currentLang);
-      syncFullscreenButton();
     });
 
     const settingsDrawer = document.getElementById('settings_drawer');
@@ -322,21 +313,28 @@
       if (event.target === settingsDrawer) settingsDrawer.classList.add('hidden');
     });
 
-    const fullscreenBtn = document.getElementById('fullscreen_toggle');
-    const syncFullscreenButton = () => {
-      const fullscreen = Boolean(document.fullscreenElement);
-      fullscreenBtn.textContent = '⛶';
-      fullscreenBtn.setAttribute('aria-label', fullscreen ? 'Exit full screen' : 'Enter full screen');
+    const fullscreenToggle = document.getElementById('fullscreen_toggle');
+    const isNativeApp = Boolean(window.Capacitor?.isNativePlatform?.());
+    const fullscreenRoot = document.documentElement;
+    const updateFullscreenButton = () => {
+      const active = document.fullscreenElement || document.webkitFullscreenElement;
+      fullscreenToggle.title = active ? 'Exit fullscreen' : 'Fullscreen';
+      fullscreenToggle.setAttribute('aria-label', fullscreenToggle.title);
     };
-    fullscreenBtn.addEventListener('click', async () => {
-      try {
-        if (document.fullscreenElement) await document.exitFullscreen();
-        else await document.documentElement.requestFullscreen({ navigationUI: 'hide' });
-      } catch (error) {
-        console.warn('Full screen is not available in this browser.', error);
-      }
-    });
-    document.addEventListener('fullscreenchange', syncFullscreenButton);
+    if (isNativeApp || !(fullscreenRoot.requestFullscreen || fullscreenRoot.webkitRequestFullscreen)) {
+      fullscreenToggle.hidden = true;
+    } else {
+      fullscreenToggle.addEventListener('click', async () => {
+        const active = document.fullscreenElement || document.webkitFullscreenElement;
+        if (active) {
+          await (document.exitFullscreen?.() || document.webkitExitFullscreen?.());
+        } else {
+          await (fullscreenRoot.requestFullscreen?.() || fullscreenRoot.webkitRequestFullscreen?.());
+        }
+      });
+      document.addEventListener('fullscreenchange', updateFullscreenButton);
+      document.addEventListener('webkitfullscreenchange', updateFullscreenButton);
+    }
 
     const syncKeyboardLayout = () => {
       if (!window.visualViewport) return;
@@ -351,7 +349,9 @@
     const keyButton = (key, className = '') => {
       const label = key === 'Escape' ? 'ESC' : key === 'Enter'
         ? '<svg class="return-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6v8H7m0 0 4-4m-4 4 4 4"/></svg>'
-        : key === 'Backspace' ? '←' : key;
+        : key === 'Backspace'
+          ? '<svg class="backspace-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6H9l-5 6 5 6h11zM12 10l4 4m0-4-4 4"/></svg>'
+          : key;
       return `<button type="button" class="virtual-key ${className}" data-key="${key}" aria-label="${key}">${label}</button>`;
     };
     const qwertyKeyboard = () => [
@@ -410,7 +410,20 @@
       window.DroidKeyboard.show(event.detail?.inputId || 'call');
     });
     document.addEventListener('droid-keyboard-dismiss', () => window.DroidKeyboard.hide());
+    const hideNativeSystemKeyboard = () => window.DroidMorseNative?.hideSystemKeyboard?.();
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) {
+        hideNativeSystemKeyboard();
+        window.setTimeout(hideNativeSystemKeyboard, 180);
+      }
+    });
     document.addEventListener('focusin', event => {
+      if (event.target.matches('#input input')) {
+        // Native Android WebView occasionally opens its IME for a focused text
+        // field even with inputmode="none". Keep the custom keyboard exclusive.
+        hideNativeSystemKeyboard();
+        window.setTimeout(hideNativeSystemKeyboard, 120);
+      }
       // Keep a keyboard already opened by the user in sync when Enter advances fields.
       if (!virtualKeyboard.classList.contains('hidden') && event.target.matches('#input input')) {
         showVirtualKeyboard(event.target);
@@ -463,7 +476,7 @@
     });
 
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=20260829.33'));
+      window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=20260830.48'));
     }
   </script>
 </body>

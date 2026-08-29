@@ -1,7 +1,7 @@
-import { Keyer } from "./keyer.js?v=20260829.33"
-import { DEFAULT, StationMessage, RunMode, AudioMessage } from "./defaults.js?v=20260829.33"
-import { Station } from "./station.js?v=20260829.33"
-import { Tst } from "./contest.js?v=20260829.33"
+import { Keyer } from "./keyer.js?v=20260830.48"
+import { DEFAULT, StationMessage, RunMode, AudioMessage } from "./defaults.js?v=20260830.48"
+import { Station } from "./station.js?v=20260830.48"
+import { Tst } from "./contest.js?v=20260830.48"
 
 export class MyStation extends Station {
     constructor() {

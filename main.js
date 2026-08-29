@@ -1,4 +1,4 @@
-import { View } from "./view.js?v=20260829.33"
+import { View } from "./view.js?v=20260830.48"
 
 window.onload = () => {
     let view = new View()

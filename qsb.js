@@ -1,6 +1,6 @@
-import { DEFAULT } from "./defaults.js?v=20260829.33"
-import * as random from "./random.js?v=20260829.33"
-import { QuickAvg } from "./quickavg.js?v=20260829.33"
+import { DEFAULT } from "./defaults.js?v=20260830.48"
+import * as random from "./random.js?v=20260830.48"
+import { QuickAvg } from "./quickavg.js?v=20260830.48"
 
 export class Qsb {
     constructor() {

@@ -1,6 +1,6 @@
-import { DEFAULT, StationMessage, OperatorState, RunMode } from "./defaults.js?v=20260829.33"
+import { DEFAULT, StationMessage, OperatorState, RunMode } from "./defaults.js?v=20260830.48"
 import * as random from './random.js'
-import { Tst } from "./contest.js?v=20260829.33"
+import { Tst } from "./contest.js?v=20260830.48"
 
 const NEVER = Number.MAX_SAFE_INTEGER
 const FULL_PATIENCE = 5
