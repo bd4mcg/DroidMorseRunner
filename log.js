@@ -1,6 +1,6 @@
-import { ContestDefinition } from "./contest-definition.js?v=20260830.48"
-import { RunMode } from "./defaults.js?v=20260830.48"
-import { Keyer } from "./keyer.js?v=20260830.48"
+import { ContestDefinition } from "./contest-definition.js?v=20260830.50"
+import { RunMode } from "./defaults.js?v=20260830.50"
+import { Keyer } from "./keyer.js?v=20260830.50"
 
 export class Log {
 

@@ -1,4 +1,4 @@
-import { DEFAULT } from "./defaults.js?v=20260830.48"
+import { DEFAULT } from "./defaults.js?v=20260830.50"
 class Modulator {
     constructor() {
         this.FCarrierFreq = DEFAULT.PITCH

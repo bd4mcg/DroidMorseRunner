@@ -1,12 +1,12 @@
-import { Calls } from "./call.js?v=20260830.48"
-import { AudioMessage, DEFAULT, RunMode, StationMessage } from "./defaults.js?v=20260830.48"
-import { Log } from "./log.js?v=20260830.48"
-import { Config } from "./config.js?v=20260830.48"
-import { Transcript } from "./transcript.js?v=20260830.48"
-import { ExpertConfig } from "./expert.js?v=20260830.48"
-import { float32ToInt16, buildWavBuffer, recFilename } from "./recording.js?v=20260830.48"
+import { Calls } from "./call.js?v=20260830.50"
+import { AudioMessage, DEFAULT, RunMode, StationMessage } from "./defaults.js?v=20260830.50"
+import { Log } from "./log.js?v=20260830.50"
+import { Config } from "./config.js?v=20260830.50"
+import { Transcript } from "./transcript.js?v=20260830.50"
+import { ExpertConfig } from "./expert.js?v=20260830.50"
+import { float32ToInt16, buildWavBuffer, recFilename } from "./recording.js?v=20260830.50"
 
-import { ContestDefinition } from "./contest-definition.js?v=20260830.48"
+import { ContestDefinition } from "./contest-definition.js?v=20260830.50"
 
 export class View {
     constructor() {
@@ -556,7 +556,7 @@ export class View {
             await this.ctx.resume()
         }
 
-        await this.ctx.audioWorklet.addModule("contest-processor.js?v=20260830.48")
+        await this.ctx.audioWorklet.addModule("contest-processor.js?v=20260830.50")
         this.ContestNode = new AudioWorkletNode(
             this.ctx,
             "contest-processor",

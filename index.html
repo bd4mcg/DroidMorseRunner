@@ -8,9 +8,9 @@
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <link rel="manifest" href="manifest.webmanifest?v=20260830.48" />
-  <link rel="stylesheet" href="style.css?v=20260830.48" type="text/css" media="screen" />
-  <title>Droid Morse Runner by BD4MCG</title>
+  <link rel="manifest" href="manifest.webmanifest?v=20260830.50" />
+  <link rel="stylesheet" href="style.css?v=20260830.50" type="text/css" media="screen" />
+  <title>Morse Code Gym by BD4MCG</title>
 </head>
 
 <body class="dark-theme">
@@ -271,7 +271,7 @@
     </div>
   </div>
 
-  <script type="module" src="main.js?v=20260830.48"></script>
+  <script type="module" src="main.js?v=20260830.50"></script>
 
   <script>
     const themeBtn = document.getElementById('theme_toggle');
@@ -449,7 +449,7 @@
     });
     let backspaceHoldDelay = null;
     let backspaceRepeat = null;
-    let suppressBackspaceClick = false;
+    let ignoreBackspaceClickUntil = 0;
     const deleteBackward = () => {
       if (!keyboardInput) return;
       const start = keyboardInput.selectionStart ?? keyboardInput.value.length;
@@ -469,7 +469,9 @@
       event.preventDefault();
       const button = event.target.closest('[data-key="Backspace"]');
       if (!button || !keyboardInput) return;
-      suppressBackspaceClick = true;
+      // Mobile browsers emit a delayed click after pointerdown. The deletion
+      // happens here, so ignore that paired click instead of deleting twice.
+      ignoreBackspaceClickUntil = Date.now() + 800;
       deleteBackward();
       stopBackspaceRepeat();
       backspaceHoldDelay = window.setTimeout(() => {
@@ -479,12 +481,11 @@
     document.addEventListener('pointerup', () => {
       if (backspaceHoldDelay || backspaceRepeat) {
         stopBackspaceRepeat();
-        window.setTimeout(() => { suppressBackspaceClick = false; }, 0);
       }
     });
     document.addEventListener('pointercancel', () => {
       stopBackspaceRepeat();
-      suppressBackspaceClick = false;
+      ignoreBackspaceClickUntil = 0;
     });
     virtualKeyboard.addEventListener('click', event => {
       const button = event.target.closest('[data-key]');
@@ -495,7 +496,7 @@
         return;
       }
       if (key === 'Backspace') {
-        if (suppressBackspaceClick) return;
+        if (Date.now() < ignoreBackspaceClickUntil) return;
         deleteBackward();
         return;
       }
@@ -510,7 +511,7 @@
     });
 
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=20260830.48'));
+      window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=20260830.50'));
     }
   </script>
 </body>

@@ -1,6 +1,6 @@
 {
-  "name": "Web Morse Runner",
-  "short_name": "Morse Runner",
+  "name": "Morse Code Gym",
+  "short_name": "Morse Gym",
   "description": "A CW contest simulator optimized for Android portrait screens.",
   "start_url": "./",
   "scope": "./",
